@@ -7,10 +7,13 @@
 #include "serial.h"
 
 void wait(uint32_t mSec){
-  _delay_ms(mSec);
+  int i;
+  for (i = 0; i < (mSec / 10); i++){
+      _delay_ms(10);
+  }
 }
 
-void LEDloop(uint32_t mSec){
+void LEDloop(int mSec){
   while(true){
     PORTB = LED;
     wait(mSec);
@@ -20,16 +23,15 @@ void LEDloop(uint32_t mSec){
 }
 void LEDloop2(uint32_t mSec){
   while(true){
-    PORTB = (1 << 0);
+    PORTB = (1 << PB0);
     wait(mSec);
-    PORTB = ~(1 << 0);
+    PORTB = ~(1 << PB0);
     wait(mSec);
   }
 }
 
-void main (void) {
-  DDRB &= ~(1<<PB0); //PORTBIT0 == OUTPUT
-
+int main (void) {
+  //DDRB &= ~(1<<PB0); //PORTBIT0 == OUTPUT
   LEDloop(500);
-  LEDloop2(500);
+  return 1;
 }
