@@ -1,4 +1,3 @@
-#define F_CPU 16000000UL
 #define LED (1 << PB0)
 
 #include <avr/io.h>
