@@ -1,22 +1,31 @@
-#define f_osc 16000000UL
-#define baudrate 38400
-#define baud_prescaler f_osc/(16*baudrate)-1
+/*#define ASYNCHRONOUS (0<<UMSEL00) // USART Mode Selection
+#define DISABLED    (0<<UPM00)
+#define PARITY_MODE  DISABLED // USART Parity Bit Selection
+
+#define ONE_BIT (0<<USBS0)
+#define STOP_BIT ONE_BIT      // USART Stop Bit Selection
+
+#define EIGHT_BIT (3<<UCSZ00)
+#define DATA_BIT   EIGHT_BIT  // USART Data Bit Selection*/
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include "serial.h"
 
+#define F_OSC 16000000UL
+#define BAUDRATE 38400
+#define BAUD_PRESCALER (((F_OSC / (BAUDRATE * 16UL))) - 1)
+
 void uart_init(void){
   // Set Baudrate
-  UBRR0H = (uint8_t)(baud_prescaler>>8);
-  UBRR0L = (uint8_t)(baud_prescaler);
+  UBRR0H = (uint8_t)(BAUD_PRESCALER>>8);
+  UBRR0L = (uint8_t)(BAUD_PRESCALER);
 
   UCSR0B |= (1<<RXEN0)|(1<<TXEN0); // Flyttar bit 1, 3 steg
   UCSR0C = (3<<UCSZ00); // Flyttar talet 3(011) i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
 }
 
-void uart_putchar(char chr){
-  char char_to_send[] = {chr,'\r','\n'};
-  while(!(UCSR0A & (1<<UDRE0)));
-  UDR0 = char_to_send++;
+void uart_putchar(char c){
+  while(!(UCSR0A & (1<<UDRE0))); // Oändlig loop tills UDR0 är tom igen
+  UDR0 = c;
 }
