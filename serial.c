@@ -10,22 +10,40 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <string.h>
+#include <stdio.h>
 #include "serial.h"
+#include "functions.h"
 
 #define F_OSC 16000000UL
 #define BAUDRATE 38400
-#define BAUD_PRESCALER (((F_OSC / (BAUDRATE * 16UL))) - 1)
+#define BAUD_PRESCALER ((F_OSC / (BAUDRATE * 16UL))) - 1
 
 void uart_init(void){
   // Set Baudrate
-  UBRR0H = (uint8_t)(BAUD_PRESCALER>>8);
-  UBRR0L = (uint8_t)(BAUD_PRESCALER);
+  UBRR0H = (BAUD_PRESCALER>>8);
+  UBRR0L = BAUD_PRESCALER;
 
   UCSR0B |= (1<<RXEN0)|(1<<TXEN0); // Flyttar bit 1, 3 steg
   UCSR0C = (3<<UCSZ00); // Flyttar talet 3(011) i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
 }
 
 void uart_putchar(char c){
-  while(!(UCSR0A & (1<<UDRE0))); // Oändlig loop tills UDR0 är tom igen
-  UDR0 = c;
+  if(c == '\n'){
+    while(!(UCSR0A & (1<<UDRE0)));
+    UDR0 = c;
+    while(!(UCSR0A & (1<<UDRE0)));
+    UDR0 = '\r';
+  }
+  else{
+    while(!(UCSR0A & (1<<UDRE0))); // Oändlig loop tills UDR0 är tom igen
+    UDR0 = c;
+  }
+}
+
+void uart_putstr(const char *string){
+  while(*string != '\0'){
+    uart_putchar(*string);
+    string++;
+  }
 }

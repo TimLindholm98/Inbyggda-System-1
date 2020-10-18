@@ -2,7 +2,7 @@
 
 #include <avr/io.h>
 #include <stdbool.h>
-#include <util/delay.h> 
+#include <util/delay.h>
 #include "functions.h"
 
 void wait(uint32_t mSec){
@@ -42,4 +42,13 @@ void LEDloop2(uint32_t mSec, char color){
     }
 
   }
+}
+
+int ArrayLenght(char *pointer){
+   int count = 0;
+   while (*pointer != '\0') {
+      count++;
+      pointer++;
+   }
+   return count;
 }

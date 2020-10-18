@@ -1,15 +1,16 @@
 #include <avr/io.h>
 #include <stdbool.h> // while(true)
 #include <util/delay.h> // For delay
+#include <string.h>
 #include "serial.h"
 #include "functions.h"
 
-int main(void){
-
+void main(void){
   uart_init();
+
   while(1){
-    uart_putchar('R');
-    wait(250);
+    char myName[] = "TimLindholm\n";
+    uart_putstr(myName);
+    wait(1000);
   }
-  return 1;
 }
