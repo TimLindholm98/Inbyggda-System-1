@@ -9,14 +9,8 @@
 
 void main(void){
   uart_init();
-  /*init_millis(F_OSC);
-  sei();*/
-  static unsigned long current_millis = 0;
 
   while(1){
-
-    char myName[] = "TimLindholm\n";
-    uart_putstr(myName);
-    wait(1000);
+    uart_echo();
   }
 }

@@ -31,9 +31,10 @@ void uart_init(void){
 void uart_putchar(char c){
   if(c == '\n'){
     while(!(UCSR0A & (1<<UDRE0)));
-    UDR0 = c;
-    while(!(UCSR0A & (1<<UDRE0)));
     UDR0 = '\r';
+    while(!(UCSR0A & (1<<UDRE0)));
+    UDR0 = c;
+
   }
   else{
     while(!(UCSR0A & (1<<UDRE0))); // Oändlig loop tills UDR0 är tom igen
@@ -45,5 +46,17 @@ void uart_putstr(const char *string){
   while(*string != '\0'){
     uart_putchar(*string);
     string++;
+  }
+}
+
+char uart_getchar(void){
+  while(!(UCSR0A & (1<<RXC0)));
+  return UDR0;
+}
+
+void uart_echo(void){
+  char received_value = uart_getchar();
+  if(received_value != '\0'){
+    uart_putchar(received_value);
   }
 }
