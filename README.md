@@ -2,7 +2,7 @@
 
 
 
-##Deluppgift 1: Blinka LED
+## Deluppgift 1: Blinka LED
 
   1. Kollade i PDF 1671493-LED.PDF
      Såg raden och använde detta för att räkna:
