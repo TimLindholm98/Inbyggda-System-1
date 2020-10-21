@@ -21,17 +21,16 @@ volatile bool clear_buffer = 0;
 void main(void){
   uart_init();
   sei();
-  //PORTB |= (1 << PB1);
   while(1){
     if(clear_buffer == true){
       for(int i = 0; i < MAX_BUFF; i++){
         buffer_array[i] = 'F';
       }
       clear_buffer = false;
-      //PORTB |= (1 << PB2);
     }
     else if(indexing > 2){
-      uart_putstr(buffer_array);
+      uart_putstr(buffer_array);  // echo back
+
       buffer_array[3] = '\n';
       buffer_array[4] = '\0';
       if(strncmp(buffer_array, OFF_STATE, 3) == 0){
