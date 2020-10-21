@@ -28,7 +28,9 @@ void main(void){
       }
       clear_buffer = false;
     }
-    else if(indexing > 2){
+    else if(indexing >= 2){
+      buffer_array[3] = '\n';
+      buffer_array[4] = '\0';
       uart_putstr(buffer_array);  // echo back
 
       buffer_array[3] = '\n';
@@ -51,7 +53,6 @@ void main(void){
 }
 
 ISR(USART_RX_vect){
-  int i = indexing;
-  buffer_array[i] = uart_getchar();
+  buffer_array[indexing] = UDR0;
   indexing++;
 }
