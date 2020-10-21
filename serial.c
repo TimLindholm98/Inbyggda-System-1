@@ -17,20 +17,17 @@
 #include <util/delay.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <util/atomic.h>
 #include "serial.h"
 #include "functions.h"
 
-const char* ON_STATE = "ON";
-const char* OFF_STATE = "OFF";
 
 void uart_init(void){
   // Set Baudrate
   UBRR0H = (BAUD_PRESCALER>>8);
   UBRR0L = BAUD_PRESCALER;
 
-  UCSR0B |= (1<<RXEN0)|(1<<TXEN0); // Flyttar bit 1, 3 steg
+  UCSR0B |= (1<<RXEN0)|(1<<TXEN0)|(1<<UDRIE0); // Flyttar bit 1, 3 steg
   UCSR0C = (3<<UCSZ00); // Flyttar talet 3(011) i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
 
   UCSR0B |= (1 << RXCIE0); // Enable the USART Recieve complete interrupt
@@ -71,15 +68,15 @@ void uart_echo(void){
   }
 }
 
-void look_for_state(char* string){
+/*void look_for_state(char* string){
   char* ON = strstr(string, ON_STATE);
   char* OFF = strstr(string, OFF_STATE);
-
+  uart_putstr(ON);
+  uart_putstr(OFF);
   if(ON){
     PORTB |= (1 << PB1);
   }
   if(OFF){
-    PORTB |= (1 << PB3);
-    PORTB |= (0 << PB1);
+    PORTB &= ~(1 << PB1);
   }
-}
+}*/

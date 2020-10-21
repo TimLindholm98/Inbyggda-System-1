@@ -29,8 +29,6 @@ void LEDloop2(uint32_t mSec, char color){
       wait(mSec);
     }
     if(color == 'B'){
-      PORTB = (1 << PB2);
-      wait(mSec);
       PORTB ^= (1 << PB2);
       wait(mSec);
     }
