@@ -8,16 +8,22 @@
 #define EIGHT_BIT (3<<UCSZ00)
 #define DATA_BIT   EIGHT_BIT  // USART Data Bit Selection*/
 
+#define F_OSC 16000000UL
+#define BAUDRATE 38400
+#define BAUD_PRESCALER ((F_OSC / (BAUDRATE * 16UL))) - 1
+#define MAX_BUFF 10
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <util/atomic.h>
 #include "serial.h"
 #include "functions.h"
 
-#define F_OSC 16000000UL
-#define BAUDRATE 38400
-#define BAUD_PRESCALER ((F_OSC / (BAUDRATE * 16UL))) - 1
+const char* ON_STATE = "ON";
+const char* OFF_STATE = "OFF";
 
 void uart_init(void){
   // Set Baudrate
@@ -26,6 +32,10 @@ void uart_init(void){
 
   UCSR0B |= (1<<RXEN0)|(1<<TXEN0); // Flyttar bit 1, 3 steg
   UCSR0C = (3<<UCSZ00); // Flyttar talet 3(011) i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
+
+  UCSR0B |= (1 << RXCIE0); // Enable the USART Recieve complete interrupt
+  //UCSR0B |= (1 << TXCIE0); // Enable the USART Transmit complete interrupt
+
 }
 
 void uart_putchar(char c){
@@ -58,5 +68,18 @@ void uart_echo(void){
   char received_value = uart_getchar();
   if(received_value != '\0'){
     uart_putchar(received_value);
+  }
+}
+
+void look_for_state(char* string){
+  char* ON = strstr(string, ON_STATE);
+  char* OFF = strstr(string, OFF_STATE);
+
+  if(ON){
+    PORTB |= (1 << PB1);
+  }
+  if(OFF){
+    PORTB |= (1 << PB3);
+    PORTB |= (0 << PB1);
   }
 }

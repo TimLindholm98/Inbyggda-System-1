@@ -10,4 +10,6 @@ char uart_getchar(void);
 
 void uart_echo(void);
 
+void look_for_state(char* string);
+
 #endif
