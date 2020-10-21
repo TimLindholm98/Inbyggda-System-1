@@ -41,12 +41,3 @@ void LEDloop2(uint32_t mSec, char color){
 
   }
 }
-
-int ArrayLenght(char *pointer){
-   int count = 0;
-   while (*pointer != '\0') {
-      count++;
-      pointer++;
-   }
-   return count;
-}

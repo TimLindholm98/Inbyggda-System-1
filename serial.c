@@ -28,8 +28,8 @@ void uart_init(void){
   UBRR0H = (BAUD_PRESCALER>>8);
   UBRR0L = BAUD_PRESCALER;
 
-  UCSR0B |= (1<<RXEN0)|(1<<TXEN0)/*|(1<<UDRIE0)*/; // Flyttar bit 1, 3 steg
-  UCSR0C = (3<<UCSZ00); // Flyttar talet 3(011) i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
+  UCSR0B |= (1<<RXEN0)|(1<<TXEN0); // Flyttar bit 1, 3 steg
+  UCSR0C = (3<<UCSZ00); // Flyttar talet 3 i binärt ett steg så UCSZ00 och UCSZ01 är båda 1:or.
 
   UCSR0B |= (1 << RXCIE0); // Enable the USART Recieve complete interrupt
   //UCSR0B |= (1 << TXCIE0); // Enable the USART Transmit complete interrupt
