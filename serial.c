@@ -68,16 +68,3 @@ void uart_echo(void){
     uart_putchar(received_value);
   }
 }
-
-/*void look_for_state(char* string){
-  char* ON = strstr(string, ON_STATE);
-  char* OFF = strstr(string, OFF_STATE);
-  uart_putstr(ON);
-  uart_putstr(OFF);
-  if(ON){
-    PORTB |= (1 << PB1);
-  }
-  if(OFF){
-    PORTB &= ~(1 << PB1);
-  }
-}*/
