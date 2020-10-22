@@ -38,9 +38,6 @@ Jag har använt arduino skölden från förra uppgiften för projektet, därför
       }
     }
 ```
-```C
-    
-```
 ## Deluppgift 2: Konfigurera upp UART för sändning (TX)
 ### 1. Implementera funktionen uart_init så att den konfigurerar upp USART0 för sändning (TX) enligt 8N1 i 38400 baud.
 ```C
@@ -89,3 +86,42 @@ void uart_putstr(const char *string){
 }
 ```
 ![alt text](https://i.imgur.com/4jgbJ5w.png)
+
+## Deluppgift 3: Konfigurera upp UART för mottagning (RX)
+### 1. Ändra implementationen av uart_init så att den även medger mottagning (RX).
+```C
+    UCSR0B |= **(1<<RXEN0)**|(1<<TXEN0);
+```
+```C
+
+```
+   **(1<<RXEN0)**
+### 2. Implementera funktionen uart_getchar så att den tar emot ett enskilt tecken.
+```C
+char uart_getchar(void){
+  while(!(UCSR0A & (1<<RXC0)));     //Behövs inte när vi har interrupts
+  return UDR0;
+}
+```
+### 3. Visa att funktionen fungerar genom att implementera uart_echo så att den väntar på ett inkommande tecken med hjälp av uart_getchar, och direkt skickar tillbaka samma tecken med uart_putchar. Anropa funktionen från main.
+```C
+void main(void){
+  uart_init();
+  while(1){
+   uart_echo();
+  }
+}
+
+//---------
+
+void uart_echo(void){
+  char received_value = uart_getchar();
+  if(received_value != '\0'){
+    uart_putchar(received_value);
+  }
+}
+```
+## Deluppgift 4 (VG-krav): Styr LED via UART
+
+Koden för det här finns i mappen och är den jag har zipat och lämnat in
+
