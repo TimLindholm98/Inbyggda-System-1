@@ -51,14 +51,19 @@ void uart_putchar(char c){
 }
 
 void uart_putstr(const char *string){
+  int i = 0;
   while(*string != '\0'){
+    if(i == MAX_BUFF){
+      return;
+    }
     uart_putchar(*string);
     string++;
+    i++;
   }
 }
 
 char uart_getchar(void){
-  //while(!(UCSR0A & (1<<RXC0)));     //Behövs inte när vi har interrupts
+  while(!(UCSR0A & (1<<RXC0)));     //Behövs inte när vi har interrupts
   return UDR0;
 }
 
