@@ -123,5 +123,44 @@ void uart_echo(void){
 ```
 ## Deluppgift 4 (VG-krav): Styr LED via UART
 
-Koden för det här finns i mappen och är den jag har zipat och lämnat in
-
+Koden för det här finns i mappen och är den jag har zipat och lämnat in.
+Det jag inte hunnit lösa är felhantering om du skickar t.ex något ord som inte är "ON" eller "OFF". Men ska försöka lösa det, jag har en aning om att indexing skapar det.
+Men det funkar att skicka med eller utan kontroll tecken.
+```C
+void main(void){
+  uart_init();
+  sei();
+  while(1){
+    if(clear_buffer == true){
+      for(int i = 0; i < MAX_BUFF-1; i++){
+        buffer_array[i] = 'X';
+      }
+      buffer_array[MAX_BUFF] = '\0';
+      clear_buffer = false;
+      indexing = 0;
+    }
+    else{
+      if(strstr(buffer_array,ON_STATE)){
+        buffer_array[2] = '\n';
+        buffer_array[3] = '\0';
+        uart_putstr(buffer_array);  // echo back
+        if(strncmp(buffer_array, ON_STATE, 2) == 0){
+          PORTB |= (1 << PB1);
+          clear_buffer = true;
+          indexing = 0;
+        }
+      }
+      else if(strstr(buffer_array,OFF_STATE)){
+        buffer_array[3] = '\n';
+        buffer_array[4] = '\0';
+        uart_putstr(buffer_array);  // echo back
+        if(strncmp(buffer_array, OFF_STATE, 3) == 0){
+          PORTB &= ~(1 << PB1);
+          clear_buffer = true;
+          indexing = 0;
+        }
+      }
+    }
+  }
+}
+```
