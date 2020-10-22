@@ -11,7 +11,7 @@
 #include "serial.h"
 #include "functions.h"
 
-static volatile char buffer_array[MAX_BUFF] = "";
+static char buffer_array[MAX_BUFF] = "";
 volatile int indexing = 0;
 
 const char ON_STATE[] = "ON";
@@ -23,18 +23,18 @@ void main(void){
   sei();
   while(1){
     if(clear_buffer == true){
-      for(int i = 0; i < MAX_BUFF; i++){
+      for(int i = 0; i < MAX_BUFF-1; i++){
         buffer_array[i] = 'F';
       }
+      buffer_array[MAX_BUFF] = '\0';
       clear_buffer = false;
     }
-    else if(indexing >= 2){
+    else if(indexing > 2){
+
       buffer_array[3] = '\n';
       buffer_array[4] = '\0';
       uart_putstr(buffer_array);  // echo back
 
-      buffer_array[3] = '\n';
-      buffer_array[4] = '\0';
       if(strncmp(buffer_array, OFF_STATE, 3) == 0){
         PORTB &= ~(1 << PB1);
         clear_buffer = true;
@@ -53,6 +53,6 @@ void main(void){
 }
 
 ISR(USART_RX_vect){
-  buffer_array[indexing] = UDR0;
+  buffer_array[indexing] = uart_getchar();
   indexing++;
 }
