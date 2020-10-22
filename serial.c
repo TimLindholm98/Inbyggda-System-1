@@ -58,7 +58,7 @@ void uart_putstr(const char *string){
 }
 
 char uart_getchar(void){
-  while(!(UCSR0A & (1<<RXC0)));     //Behövs inte när vi har interrupts
+  //while(!(UCSR0A & (1<<RXC0)));     //Behövs inte när vi har interrupts
   return UDR0;
 }
 

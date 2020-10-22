@@ -29,8 +29,7 @@ void main(void){
       buffer_array[MAX_BUFF] = '\0';
       clear_buffer = false;
     }
-    else if(indexing > 2){
-
+    else if(indexing >= 2){
       buffer_array[3] = '\n';
       buffer_array[4] = '\0';
       uart_putstr(buffer_array);  // echo back
